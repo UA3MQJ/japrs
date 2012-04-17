@@ -1,0 +1,3 @@
+;Objects
+UA3MAD /r 58.01.83N 038.51.23E Echo Repeater 430
+UA3MAO /r 58.01.83N 038.51.24E Repeater 430
