@@ -233,9 +233,9 @@ public class jAPRS extends MIDlet implements Runnable, CommandListener  {
                     System.out.println( "Передача координат по таймеру" );
 
                     //если соединение установлено, то просто отправка, если нет
-                    String pck = oreadFile( lastPositionFile );
+                    String pck = oreadFile( lastPositionFile, 1 );
                     if ( lastObjectsFile.length()>0 ) {
-                        pck += oreadFile( lastObjectsFile );
+                        pck += oreadFile( lastObjectsFile, 1 );
                     }
 
                     if (SRVConnected==true) {
@@ -705,8 +705,8 @@ public class jAPRS extends MIDlet implements Runnable, CommandListener  {
             }//GEN-BEGIN:|7-commandAction|65|7-postCommandAction
         }//GEN-END:|7-commandAction|65|7-postCommandAction
         // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|66|177-postAction
-    //</editor-fold>//GEN-END:|7-commandAction|66|177-postAction
+    }//GEN-BEGIN:|7-commandAction|66|
+    //</editor-fold>//GEN-END:|7-commandAction|66|
 
 
 
@@ -811,7 +811,7 @@ public class jAPRS extends MIDlet implements Runnable, CommandListener  {
     public Command getItemCommand3() {
         if (itemCommand3 == null) {//GEN-END:|28-getter|0|28-preInit
             // write pre-init user code here
-            itemCommand3 = new Command("Send Position", Command.ITEM, 0);//GEN-LINE:|28-getter|1|28-postInit
+            itemCommand3 = new Command("Send Pos/Obj", Command.ITEM, 0);//GEN-LINE:|28-getter|1|28-postInit
             // write post-init user code here
         }//GEN-BEGIN:|28-getter|2|
         return itemCommand3;
@@ -984,7 +984,7 @@ public class jAPRS extends MIDlet implements Runnable, CommandListener  {
 
                     System.out.println("ручная отправка");
 
-                    String pck = oreadFile( fileBrowser.getSelectedFileURL() );
+                    String pck = oreadFile( fileBrowser.getSelectedFileURL(), 0 );
 
                     System.out.println("String pck =" +pck+"=");
 
@@ -2137,6 +2137,7 @@ public class jAPRS extends MIDlet implements Runnable, CommandListener  {
         textField12.setString( APRS_USER + "/" + APRS_PASS  );
 
         
+        textField13.setString( lastPosition );
         textField14.setString( lastStatus );
         textField16.setString( Integer.toString( (int)(timerCounter/60) )+"m"+Integer.toString( timerCounter-(((int)(timerCounter/60))*60) )+"s" );
 
@@ -2521,7 +2522,9 @@ public void sendPacketMode1( String tPacket ) {
 }
 
 //чтение координат из текстового файла возвращает строку-пакет
-private String oreadFile( String fileName ) {
+private String oreadFile( String fileName, int mode ) {
+//mode = 0 отправка руками
+//mode = 1 отправка по таймеру. в этом случае отправляются не все объекты
 
         try {
 
@@ -2568,6 +2571,7 @@ private String oreadFile( String fileName ) {
                     String ObjLat  = new String("");
                     String ObjLng  = new String("");
                     String ObjComment = new String("");
+                    boolean actObj = false; //активные объекты (передаются и по таймеру маяка) имеют звездочку перед позывным
 
 
                     do {
@@ -2588,6 +2592,11 @@ private String oreadFile( String fileName ) {
                     ObjLng = ObjLng.substring(0, 3)+ObjLng.substring(4);
 
                     ObjCall += "         ";
+                    if ( ObjCall.substring(0, 1).equalsIgnoreCase("*")== true ) {
+                        actObj = true;
+                        ObjCall = ObjCall.substring(1);
+                    } else {
+                    }
                     ObjCall = ObjCall.substring(0, 9);
 /*
                     System.out.println( "ObjCall=" + ObjCall + ";" );
@@ -2616,8 +2625,14 @@ private String oreadFile( String fileName ) {
                     sb.append(numberToString(minute));
                     sb.append('z');
 
-                    packet += APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:;" + ObjCall+"*"+sb+ObjLat+ObjSym.charAt(0)+ObjLng+ObjSym.charAt(1)+' '+ObjComment+'\n'+'\r';
-//                    System.out.println( "SEND packet " + packet );
+                    if (mode==0) {
+                        packet += APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:;" + ObjCall+"*"+sb+ObjLat+ObjSym.charAt(0)+ObjLng+ObjSym.charAt(1)+' '+ObjComment+'\n'+'\r';
+//                      System.out.println( "SEND packet " + packet );
+                    } else {
+                        if ( actObj == true ) {
+                            packet += APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:;" + ObjCall+"*"+sb+ObjLat+ObjSym.charAt(0)+ObjLng+ObjSym.charAt(1)+' '+ObjComment+'\n'+'\r';
+                        }
+                    }
 
                 } while (  position.indexOf("\r") > 0 );
 
