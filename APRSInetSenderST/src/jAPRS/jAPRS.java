@@ -2444,6 +2444,28 @@ public void sendPacketMode1( String tPacket ) {
             System.out.println("CONNECT");
             byte[] proxy_conn_data = ("CONNECT "+APRS_SERVER+":"+APRS_PORT+" HTTP/1.1\r\nAuthorization: Basic Ym9sc2hha292X2F2OmZydGtrZg==\r\nProxy-Authorization: Basic Ym9sc2hha292X2F2OmZydGtrZg==\r\n\r\n").getBytes();
             os.write(proxy_conn_data);
+
+                    StringBuffer data = new StringBuffer();
+                    byte[] buf = new byte[1024];
+
+                    try {
+
+                        int count = is.read(buf);
+                        //if( count == -1 ) { break; }
+                        for(int i = 0; i < count; i++) {
+                                   data.append((char) buf[i]);
+                        }
+
+                        String message = new String (data.toString());
+
+                        System.out.println("sendMode1 - read: " + message);
+
+                    } catch (Exception e) {
+
+                        System.out.println("sendMode1 is - Exception: " + e);
+
+                    }
+
         }
 
                     // APRS_FILTER = "p/ISS/R/U/LY/YL/ES/EU/EW/ER/4X/4Z/";
@@ -2455,15 +2477,39 @@ public void sendPacketMode1( String tPacket ) {
         //аутентификация на aprs сервере
         byte[] conn_data = ("user " + APRS_USER + " pass " + APRS_PASS + " vers QAPRS_JPos v1 filter " + APRS_FILTER + "\n").getBytes();
         os.write(conn_data);
-        System.out.println("os.write user ...");
+        System.out.println("os.write user ..."); 
+
+
+                    StringBuffer data = new StringBuffer();
+                    byte[] buf = new byte[1024];
+
+                    try {
+
+                        int count = is.read(buf);
+                        //if( count == -1 ) { break; }
+                        for(int i = 0; i < count; i++) {
+                                   data.append((char) buf[i]);
+                        }
+
+                        String message = new String (data.toString());
+
+                        System.out.println("sendMode1 - read: " + message);
+
+                    } catch (Exception e) {
+
+                        System.out.println("sendMode1 is - Exception: " + e);
+
+                    }
 
         //отправка пакета
         byte[] packet_data = tPacket.getBytes();
         os.write(packet_data);
         System.out.println("os.write packet %"+tPacket+"%");
 
+
+        //чтобы удостовериться, что соединились для передачи - читаем из сокета.
         /*
-        StringBuffer data = new StringBuffer();
+                StringBuffer data = new StringBuffer();
                 byte[] buf = new byte[1024];
 
                     try {
@@ -2503,10 +2549,12 @@ public void sendPacketMode1( String tPacket ) {
                     }*/
 
         os.close();
+        is.close();
         sc.close();
         System.out.println("os.sc close");
 
         os = null;
+        is = null;
         sc = null;
 
 
@@ -2518,6 +2566,8 @@ public void sendPacketMode1( String tPacket ) {
         screenUpdate();
 
     }
+
+    System.out.println("sendMode1 ended!!!!!!!!!!!!!!!!!");
 
 }
 
@@ -2540,71 +2590,152 @@ private String oreadFile( String fileName, int mode ) {
             int length = fis.read(b, 0, 1024);
             fis.close();
 
-            String position = new String(b, 0, length);
-            String tstr = new String("");
+            if (length>0) {
 
-            String packet = new String("");
+                String position = new String(b, 0, length);
+                String tstr = new String("");
 
-            if ( position.substring(0,8).equalsIgnoreCase(";OBJECTS") ) {
-                //если в начале файла стоит ;Objects значит там объекты
-                System.out.println( "SEND Objects(s) file" );
+                String packet = new String("");
 
-                lastObjectsFile = fileName;
+                if ( position.substring(0,8).equalsIgnoreCase(";OBJECTS") ) {
+                    //если в начале файла стоит ;Objects значит там объекты
+                    System.out.println( "SEND Objects(s) file" );
 
-                //System.out.println( "oreadFile=>" + position );
-
-                do {
-                    position = position.substring( position.indexOf("\r") + 2 );
-
-                    if ( position.indexOf("\r") == -1  ) {
-                        tstr = position;
-                    } else {
-                        tstr = position.substring(0, position.indexOf("\r") );
-                    }
-                    
-                    //System.out.println( "OBJECT STRING =" + tstr + ";" );
-
-                    int tCntr = 0;
-
-                    String ObjCall = new String("");
-                    String ObjSym  = new String("");
-                    String ObjLat  = new String("");
-                    String ObjLng  = new String("");
-                    String ObjComment = new String("");
-                    boolean actObj = false; //активные объекты (передаются и по таймеру маяка) имеют звездочку перед позывным
-
+                    lastObjectsFile = fileName;
 
                     do {
-                        if ( tCntr==0 ) { ObjCall = tstr.substring( 0, tstr.indexOf(" ") ); }
-                        if ( tCntr==1 ) { ObjSym = tstr.substring( 0, tstr.indexOf(" ") ); }
-                        if ( tCntr==2 ) { ObjLat = tstr.substring( 0, tstr.indexOf(" ") ); }
-                        if ( tCntr==3 ) { ObjLng = tstr.substring( 0, tstr.indexOf(" ") ); }
 
-                        tstr = tstr.substring( tstr.indexOf(" ") + 1 );
+                        tstr = position;
+                        if ( position.indexOf("\r") != -1  ) {
+                            tstr = position.substring(0, position.indexOf("\r") );
+                        }
+
+                        //выводим объекты за исключением ; заремаренных
+                        if ( (tstr.substring(0,1).equalsIgnoreCase(";"))==false ) {
+
+                            System.out.println( "Object string" + tstr );
+
+                            int tCntr = 0;
+
+                            String ObjCall = new String("");
+                            String ObjSym  = new String("");
+                            String ObjLat  = new String("");
+                            String ObjLng  = new String("");
+                            String ObjComment = new String("");
+                            boolean actObj = false; //активные объекты (передаются и по таймеру маяка) имеют звездочку перед позывным
 
 
-                        tCntr++;
+                            do {
+                                if ( tCntr==0 ) { ObjCall = tstr.substring( 0, tstr.indexOf(" ") ); }
+                                if ( tCntr==1 ) { ObjSym = tstr.substring( 0, tstr.indexOf(" ") ); }
+                                if ( tCntr==2 ) { ObjLat = tstr.substring( 0, tstr.indexOf(" ") ); }
+                                if ( tCntr==3 ) { ObjLng = tstr.substring( 0, tstr.indexOf(" ") ); }
 
-                    } while ((tCntr<4));
-                    ObjComment = tstr;
+                                tstr = tstr.substring( tstr.indexOf(" ") + 1 );
 
-                    ObjLat = ObjLat.substring(0, 2)+ObjLat.substring(3);
-                    ObjLng = ObjLng.substring(0, 3)+ObjLng.substring(4);
 
-                    ObjCall += "         ";
-                    if ( ObjCall.substring(0, 1).equalsIgnoreCase("*")== true ) {
-                        actObj = true;
-                        ObjCall = ObjCall.substring(1);
-                    } else {
-                    }
-                    ObjCall = ObjCall.substring(0, 9);
-/*
-                    System.out.println( "ObjCall=" + ObjCall + ";" );
-                    System.out.println( "ObjSym=" + ObjSym + ";" );
-                    System.out.println( "ObjLat=" + ObjLat + ";" );
-                    System.out.println( "ObjLng=" + ObjLng + ";" );
-                    System.out.println( "ObjComment=" + ObjComment + ";" );
-*/
+                                tCntr++;
+
+                            } while ((tCntr<4));
+                            ObjComment = tstr;
+
+                            ObjLat = ObjLat.substring(0, 2)+ObjLat.substring(3);
+                            ObjLng = ObjLng.substring(0, 3)+ObjLng.substring(4);
+
+                            ObjCall += "         ";
+                            if ( ObjCall.substring(0, 1).equalsIgnoreCase("*")== true ) {
+                                actObj = true;
+                                ObjCall = ObjCall.substring(1);
+                            } else {
+                            }
+                            ObjCall = ObjCall.substring(0, 9);
+
+                            //System.out.println( "ObjCall=" + ObjCall + ";" );
+                            //System.out.println( "ObjSym=" + ObjSym + ";" );
+                            //System.out.println( "ObjLat=" + ObjLat + ";" );
+                            //System.out.println( "ObjLng=" + ObjLng + ";" );
+                            //System.out.println( "ObjComment=" + ObjComment + ";" );
+
+                            Date date = new Date();
+
+                            TimeZone defaultZone = TimeZone.getTimeZone("GMT-2");
+
+                            int offs = defaultZone.getRawOffset();
+
+                            Calendar calendar = Calendar.getInstance(defaultZone);
+                            calendar.setTime(date);
+                            StringBuffer sb = new StringBuffer();
+
+
+                            int day = calendar.get(Calendar.DAY_OF_MONTH);
+                            sb.append(numberToString(day));
+                            int hour = calendar.get(Calendar.HOUR_OF_DAY) + 1;
+                            sb.append(numberToString(hour));
+                            //int minute = calendar.get(Calendar.MINUTE) + 1;
+                            int minute = calendar.get(Calendar.MINUTE); //это чтобы 60 минут не было
+                            sb.append(numberToString(minute));
+                            sb.append('z');
+
+                            if (mode==0) {
+                                packet += APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:;" + ObjCall+"*"+sb+ObjLat+ObjSym.charAt(0)+ObjLng+ObjSym.charAt(1)+' '+ObjComment+'\n'+'\r';
+        //                      System.out.println( "SEND packet " + packet );
+                            } else {
+                                if ( actObj == true ) {
+                                    packet += APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:;" + ObjCall+"*"+sb+ObjLat+ObjSym.charAt(0)+ObjLng+ObjSym.charAt(1)+' '+ObjComment+'\n'+'\r';
+                                }
+                            }
+
+                        }
+
+                        if ( position.indexOf("\r") != -1   ) {
+                            position = position.substring( position.indexOf("\r") + 2 );
+                        } else {
+                            position="";
+                        }
+
+                    } while (  position.length()>0 );
+
+
+                    return packet;
+
+                } else {
+                    //иначе просто координаты
+                    System.out.println( "SEND POSITION file" );
+
+                    lastPositionFile = fileName;
+
+
+                    //до первого пробела - широта
+                    //до второго долгота
+                    //а после - текст маяка
+                    int space1 = position.indexOf(" ");
+                    String Lat = position.substring(0, space1 );
+                    int space2 = position.indexOf(" ", space1 +1);
+                    String Lng = position.substring(space1+1, position.indexOf(" ", space1+1));
+                    String Msg = position.substring(space2+1);
+
+                    lastPosition = Lat + " " + Lng;
+                    lastStatus   = Msg;
+
+                    int LngR = Integer.parseInt( Lng.substring(7, 9) );
+                    int LatR = Integer.parseInt( Lat.substring(6, 8) );
+
+                    Random r = new Random();
+
+                    //удаление одной лишней точки
+                    Lat = Lat.substring(0, 2)+Lat.substring(3);
+                    Lng = Lng.substring(0, 3)+Lng.substring(4);
+
+                    //случайное изменение координат в небольших пределах, чтобы обойти проверку на дубли на aprsfi
+                    LngR = LngR +  (int)(r.nextFloat()*3);
+                    LatR = LatR +  (int)(r.nextFloat()*3);
+
+                    if ( LngR > 99 ) LngR = 99;
+                    if ( LatR > 99 ) LatR = 99;
+
+                    Lat = Lat.substring(0, 5)+numberToString(LatR)+Lat.substring(7, 8);
+                    Lng = Lng.substring(0, 6)+numberToString(LngR)+Lng.substring(8, 9);
+
                     Date date = new Date();
 
                     TimeZone defaultZone = TimeZone.getTimeZone("GMT-2");
@@ -2615,7 +2746,7 @@ private String oreadFile( String fileName, int mode ) {
                     calendar.setTime(date);
                     StringBuffer sb = new StringBuffer();
 
-                    
+                    sb.append('/');
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
                     sb.append(numberToString(day));
                     int hour = calendar.get(Calendar.HOUR_OF_DAY) + 1;
@@ -2625,100 +2756,35 @@ private String oreadFile( String fileName, int mode ) {
                     sb.append(numberToString(minute));
                     sb.append('z');
 
-                    if (mode==0) {
-                        packet += APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:;" + ObjCall+"*"+sb+ObjLat+ObjSym.charAt(0)+ObjLng+ObjSym.charAt(1)+' '+ObjComment+'\n'+'\r';
-//                      System.out.println( "SEND packet " + packet );
+                    //String packet = APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:"+sb+Lat+APRS_STATION_SYM.charAt(0)+Lng+APRS_STATION_SYM.charAt(1)+Msg+'\n'+'\r';
+                    packet = APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:"+sb+Lat+APRS_STATION_SYM.charAt(0)+Lng+APRS_STATION_SYM.charAt(1)+Msg+'\n'+'\r';
+
+                    //UA3MQJ>APUN25,TCPIP*: + MsgText
+                    //UA1CEC>APU25N,TCPIP*,qAC,T2RUSSIA:=5931.88N/03053.60E&10147 - inet {UIV32}
+                    //5931.88N 03053.60E Fly e135 - inet {QAPRSj}
+                    //System.out.println( "oreadFile=>" + packet );
+
+                    if (length > 0) {
+                        return packet;
                     } else {
-                        if ( actObj == true ) {
-                            packet += APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:;" + ObjCall+"*"+sb+ObjLat+ObjSym.charAt(0)+ObjLng+ObjSym.charAt(1)+' '+ObjComment+'\n'+'\r';
-                        }
+                       return "";
                     }
 
-                } while (  position.indexOf("\r") > 0 );
 
-                return packet;
-
-            } else {
-                //иначе просто координаты
-                System.out.println( "SEND POSITION file" );
-
-                lastPositionFile = fileName;
-
-
-                //до первого пробела - широта
-                //до второго долгота
-                //а после - текст маяка
-                int space1 = position.indexOf(" ");
-                String Lat = position.substring(0, space1 );
-                int space2 = position.indexOf(" ", space1 +1);
-                String Lng = position.substring(space1+1, position.indexOf(" ", space1+1));
-                String Msg = position.substring(space2+1);
-
-                lastPosition = Lat + " " + Lng;
-                lastStatus   = Msg;
-
-                int LngR = Integer.parseInt( Lng.substring(7, 9) );
-                int LatR = Integer.parseInt( Lat.substring(6, 8) );
-
-                Random r = new Random();
-
-                //удаление одной лишней точки
-                Lat = Lat.substring(0, 2)+Lat.substring(3);
-                Lng = Lng.substring(0, 3)+Lng.substring(4);
-
-                //случайное изменение координат в небольших пределах, чтобы обойти проверку на дубли на aprsfi
-                LngR = LngR +  (int)(r.nextFloat()*3);
-                LatR = LatR +  (int)(r.nextFloat()*3);
-
-                if ( LngR > 99 ) LngR = 99;
-                if ( LatR > 99 ) LatR = 99;
-
-                Lat = Lat.substring(0, 5)+numberToString(LatR)+Lat.substring(7, 8);
-                Lng = Lng.substring(0, 6)+numberToString(LngR)+Lng.substring(8, 9);
-
-                Date date = new Date();
-
-                TimeZone defaultZone = TimeZone.getTimeZone("GMT-2");
-
-                int offs = defaultZone.getRawOffset();
-
-                Calendar calendar = Calendar.getInstance(defaultZone);
-                calendar.setTime(date);
-                StringBuffer sb = new StringBuffer();
-
-                sb.append('/');
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                sb.append(numberToString(day));
-                int hour = calendar.get(Calendar.HOUR_OF_DAY) + 1;
-                sb.append(numberToString(hour));
-                //int minute = calendar.get(Calendar.MINUTE) + 1;
-                int minute = calendar.get(Calendar.MINUTE); //это чтобы 60 минут не было
-                sb.append(numberToString(minute));
-                sb.append('z');
-
-                //String packet = APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:"+sb+Lat+APRS_STATION_SYM.charAt(0)+Lng+APRS_STATION_SYM.charAt(1)+Msg+'\n'+'\r';
-                packet = APRS_STATION_NAME+">"+APRSCALL+",TCPIP*:"+sb+Lat+APRS_STATION_SYM.charAt(0)+Lng+APRS_STATION_SYM.charAt(1)+Msg+'\n'+'\r';
-
-                //UA3MQJ>APUN25,TCPIP*: + MsgText
-                //UA1CEC>APU25N,TCPIP*,qAC,T2RUSSIA:=5931.88N/03053.60E&10147 - inet {UIV32}
-                //5931.88N 03053.60E Fly e135 - inet {QAPRSj}
-                //System.out.println( "oreadFile=>" + packet );
-
-                if (length > 0) {
-                    return packet;
-                } else {
-                   return "";
                 }
 
-
+            } //если длина файла больше 1
+            else {
+                return "";
             }
-
 
 
         } catch (IOException ex) {
             ex.printStackTrace();
             return "";
         }
+
+
 
 }
 
