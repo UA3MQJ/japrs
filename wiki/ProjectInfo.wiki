@@ -20,17 +20,27 @@ Contents of the file - point coordinates and comment.
 Files are stored on the phone flash card and grouped into different folders.
 The group, for example - on the routes of buses, on which you can move around.
 
-Example position: 
+Example position:
+
 file 01-CentralPlace.txt 
+
 contains the text: 
+
 58.02.08N 038.51.32E Central Place {jAPRS}
 
+
 Example objects:
+
 file localobjects.txt
+
 contains the text: 
+
 ;Objects
+
 UA3MAD /r 58.01.83N 038.51.23E Echo Repeater 430
+
 UA3MAO /r 58.01.83N 038.51.24E Repeater 430
+
 
 == Features  ==
  * Send beacon manually
@@ -41,7 +51,7 @@ UA3MAO /r 58.01.83N 038.51.24E Repeater 430
 
 == Version history ==
  * The first version was released on 03/26/2011
- * Version of 02.07.2012 - Added feature to send objects.
+ * Version of 02.07.2012 - Added feature to send objects.
 
 == Download ==
 http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jad
