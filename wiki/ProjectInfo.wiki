@@ -34,18 +34,17 @@ Example objects:
 file localobjects.txt
 
 contains the text: 
-
+{{{
 ;Objects
-
 UA3MAD /r 58.01.83N 038.51.23E Echo Repeater 430
-
 UA3MAO /r 58.01.83N 038.51.24E Repeater 430
-
+}}}
 
 == Features  ==
  * Send beacon manually
  * Automatic sending of the last beacon regularly after a specified period
  * Send APRS text messages
+ * Send objects
  * Choose the type of connection to APRS server: permanent or temporary (set at the time for send data)
  * Receive APRS text messages (when use permanent connection)
 
