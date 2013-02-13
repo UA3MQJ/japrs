@@ -63,5 +63,5 @@ JAPRS the project is open source and .
 
 == Links ==
 * http://aprs2.qrz.ru/index.php/JAPRS - page on qrz.ru
-* http://forum.qrz.ru/thread30823.html - forum thread
 
+* http://forum.qrz.ru/thread30823.html - forum thread

@@ -49,5 +49,6 @@ http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jar
 
 == Ссылки ==
 * http://aprs2.qrz.ru/index.php/JAPRS - страница программы на qrz.ru
+
 * http://forum.qrz.ru/thread30823.html - обсуждение программы
 
