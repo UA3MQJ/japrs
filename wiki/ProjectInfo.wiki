@@ -22,18 +22,14 @@ The group, for example - on the routes of buses, on which you can move around.
 
 *Example position:*
 
-file _01-CentralPlace.txt_
-
-contains the text: 
+file _01-CentralPlace.txt_ contains the text: 
 {{{
 58.02.08N 038.51.32E Central Place {jAPRS}
 }}}
 
 *Example objects:*
 
-file _localobjects.txt_
-
-contains the text: 
+file _localobjects.txt_ contains the text: 
 {{{
 ;Objects
 UA3MAD /r 58.01.83N 038.51.23E Echo Repeater 430
