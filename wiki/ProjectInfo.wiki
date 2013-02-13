@@ -4,32 +4,59 @@
 
 Author: Alexey UA3MQJ, Rybinsk, Yaroslavl region.
 
-== Введение ==
-В теме про [http://forum.qrz.ru/thread26112.html альтернативные способы определения координат] рассматривались варианты определения координат подвижной APRS станции без GPS-приёмника. Один из таких вариантов - определение координат по милевым столбам. Общий смысл в том, что берётся определенная точка в пространстве, ей даётся определенное имя и определяются точные координаты. Так определяются несколько точек, например, по пути предстоящего маршрута. Теперь, достигнув определенной точки маршрута, можно точно знать свои координаты.
+== Introduction ==
+In the forum thread [http://forum.qrz.ru/thread26112.html alternative positioning] looking ways of positioning APRS stations without using GPS-receiver. 
+One of these methods - determine the coordinates from known milestones.
+The general sense is that take a geographic point, set for this point specific name and determined the exact coordinates. 
+When traveling on a route, it defined points.
+Now, having reached a certain point of the route, you can know exactly what your coordinates.
 
-== О программе ==
-jAPRS предназначена для отправки на сервер сети [[APRS-IS]] APRS сообщения о нахождении себя в определенном месте. Программа реализована на платформе J2ME, т. е. - это JAVA-приложение для сотового телефона. Точки в пространстве хранятся в отдельных текстовых файлах. Имя файла - это имя точки. Содержимое файла - координаты точки и комментарий. Файлы располагаются на флеш-карте телефона и для удобства могут быть разложены по разным папкам, например - по маршрутам движения автобусов, на которых вы можете передвигаться. Например: файл 01-Автовокзал.txt может содержать в себе следующие данные: 58.02.08N 038.51.32E Autowokzal {jAPRS}
+== About ==
+jAPRS used to send position messages to the APRS server that're in a certain geographic point.
+The program is developed on a platform J2ME(JAVA-application is for a cell phone).
+The geographic points are stored in separate text files.
+The file name is the name of the point.
+Contents of the file - point coordinates and comment.
+Files are stored on the phone flash card and grouped into different folders.
+The group, for example - on the routes of buses, on which you can move around.
 
-== Возможности программы ==
-Программа позволяет:
- * Отправлять маяк вручную
- * Автоматически отправлять последний переданный маяк по таймеру регулярно через заданное время
- * Отправлять APRS сообщения
- * Выбирать тип соединения с APRS сервером: постоянное или временное (устанавливается на момент отправки данных)
- * Принимать APRS сообщения (при постоянном соединении)
+Example position: 
+file 01-CentralPlace.txt 
+contains the text: 
+58.02.08N 038.51.32E Central Place {jAPRS}
 
-== История версий ==
- * Первая версия программы была выпущена 26.03.2011
- * Версия от 02.07.2012 - добавлена возможность отправки объектов.
+Example objects:
+file localobjects.txt
+contains the text: 
+;Objects
+UA3MAD /r 58.01.83N 038.51.23E Echo Repeater 430
+UA3MAO /r 58.01.83N 038.51.24E Repeater 430
 
-== Скачать ==
+== Features  ==
+ * Send beacon manually
+ * Automatic sending of the last beacon regularly after a specified period
+ * Send APRS text messages
+ * Choose the type of connection to APRS server: permanent or temporary (set at the time for send data)
+ * Receive APRS text messages (when use permanent connection)
+
+== Version history ==
+ * The first version was released on 03/26/2011
+ * Version of 02.07.2012 - Added feature to send objects.
+
+== Download ==
 http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jad
 http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jar
 
-== Статус проекта ==
-Проект находится в стадии разработки. Новые версии и доработки ведутся по мере возможностей и предложений со стороны пользователей. Ведётся проработка возможностей определения координат по CELL_ID, определение координат через GPS на базе Location API для J2ME(JSR179), работы со звуком. Программа разработана для телефонов с клавиатурой с использованием стандартных меню, поэтому должна работать практически на всех телефонах с поддержкой флеш-карт. Также она может работать на сенсорных телефонах с помощью виртуальной клавиатуры, которая обычно есть в таких телефонах (но это не так удобно). Среда разработки - свободная NetBeans IDE 6.9.1 и SUN Wireless Toolkit 2.5.2, которые могут быть свободно скачаны с сайтов разработчиков. Сам проект jAPRS является открытым.
+== Project status ==
+The project is in the development stage. 
+Updates and improvements are maintained to the extent possible and suggestions from users. 
+Being worked on positioning capabilities CELL_ID, the coordinates of a GPS-based Location API for J2ME (JSR179), work with sound. 
+The program is designed for phones with a keyboard with standard menus, so should work on almost all phones with support for flash memory cards. 
+It can also run on a touch phone with a virtual keyboard, which is commonly in these phones (but it is not convenient). 
+Development environment - the free NetBeans IDE 6.9.1 and SUN Wireless Toolkit 2.5.2, which can be freely downloaded from the developer. 
+JAPRS the project is open source and .
 
-== Ссылки ==
-* http://aprs2.qrz.ru/index.php/JAPRS - страница программы на qrz.ru
-* http://forum.qrz.ru/thread30823.html - обсуждение программы
+== Links ==
+* http://aprs2.qrz.ru/index.php/JAPRS - page on qrz.ru
+* http://forum.qrz.ru/thread30823.html - forum thread
 
