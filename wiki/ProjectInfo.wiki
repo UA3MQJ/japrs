@@ -20,18 +20,18 @@ Contents of the file - point coordinates and comment.
 Files are stored on the phone flash card and grouped into different folders.
 The group, for example - on the routes of buses, on which you can move around.
 
-Example position:
+*Example position:*
 
-file 01-CentralPlace.txt 
+file _01-CentralPlace.txt_
 
 contains the text: 
-
+{{{
 58.02.08N 038.51.32E Central Place {jAPRS}
+}}}
 
+*Example objects:*
 
-Example objects:
-
-file localobjects.txt
+file _localobjects.txt_
 
 contains the text: 
 {{{
