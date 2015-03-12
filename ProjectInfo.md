@@ -1,0 +1,66 @@
+# Project jAPRS #
+
+'''jAPRS''' aka '''APRS I-net Position Sender'''  - java (J2ME) APRS-client for mobile phones.
+
+Author: Alexey UA3MQJ, Rybinsk, Yaroslavl region.
+
+## Introduction ##
+In the forum thread [alternative positioning](http://forum.qrz.ru/thread26112.html) looking ways of positioning APRS stations without using GPS-receiver.
+One of these methods - determine the coordinates from known milestones.
+The general sense is that take a geographic point, set for this point specific name and determined the exact coordinates.
+When traveling on a route, it defined points.
+Now, having reached a certain point of the route, you can know exactly what your coordinates.
+
+## About ##
+jAPRS used to send position messages to the APRS server that're in a certain geographic point.
+The program is developed on a platform J2ME(JAVA-application is for a cell phone).
+The geographic points are stored in separate text files.
+The file name is the name of the point.
+Contents of the file - point coordinates and comment.
+Files are stored on the phone flash card and grouped into different folders.
+The group, for example - on the routes of buses, on which you can move around.
+
+**Example position:**
+
+file _01-CentralPlace.txt_ contains the text:
+```
+58.02.08N 038.51.32E Central Place {jAPRS}
+```
+
+**Example objects:**
+
+file _localobjects.txt_ contains the text:
+```
+;Objects
+UA3MAD /r 58.01.83N 038.51.23E Echo Repeater 430
+UA3MAO /r 58.01.83N 038.51.24E Repeater 430
+```
+
+## Features ##
+  * Send beacon manually
+  * Automatic sending of the last beacon regularly after a specified period
+  * Send APRS text messages
+  * Send objects
+  * Choose the type of connection to APRS server: permanent or temporary (set at the time for send data)
+  * Receive APRS text messages (when use permanent connection)
+
+## Version history ##
+  * The first version was released on 03/26/2011
+  * Version of 02.07.2012 - Added feature to send objects.
+
+## Download ##
+http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jad
+http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jar
+
+## Project status ##
+The project is in the development stage.
+Updates and improvements are maintained to the extent possible and suggestions from users.
+Being worked on positioning capabilities CELL\_ID, the coordinates of a GPS-based Location API for J2ME (JSR179), work with sound.
+The program is designed for phones with a keyboard with standard menus, so should work on almost all phones with support for flash memory cards.
+It can also run on a touch phone with a virtual keyboard, which is commonly in these phones (but it is not convenient).
+Development environment - the free NetBeans IDE 6.9.1 and SUN Wireless Toolkit 2.5.2, which can be freely downloaded from the developer.
+JAPRS the project is open source and .
+
+## Links ##
+**http://aprs2.qrz.ru/index.php/JAPRS - page on qrz.ru**
+
