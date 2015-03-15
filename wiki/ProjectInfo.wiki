@@ -49,8 +49,8 @@ UA3MAO /r 58.01.83N 038.51.24E Repeater 430
  * Version of 02.07.2012 - Added feature to send objects.
 
 == Download ==
-http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jad
-http://japrs.googlecode.com/svn/APRSInetSenderST/APRSInetSender.jar
+https://raw.githubusercontent.com/UA3MQJ/japrs/master/APRSInetSenderST/APRSInetSender.jad
+https://raw.githubusercontent.com/UA3MQJ/japrs/master/APRSInetSenderST/APRSInetSender.jar
 
 == Project status ==
 The project is in the development stage. 
